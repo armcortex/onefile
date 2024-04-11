@@ -3,7 +3,7 @@ import os.path
 import glob
 import argparse
 from datetime import datetime
-
+import tiktoken
 
 def is_supported_file(file_path):
     return file_path.endswith(('.py', '.c', '.cpp'))
@@ -16,6 +16,13 @@ def read_code(file_path):
 
 def wrap_code_in_xml_tags(code, file_name):
     return f'<{file_name}>\n{code}\n</{file_name}>\n\n'
+
+
+def calculate_token_count(file_path, encoding_name='cl100k_base'):
+    code = read_code(file_path)
+    encoding = tiktoken.get_encoding(encoding_name)
+    tokens = encoding.encode(code, allowed_special={'<|endoftext|>'})
+    return len(tokens)
 
 
 def process_files(folder_location):
@@ -32,6 +39,10 @@ def process_files(folder_location):
                     code = read_code(file_path)
                     wrapped_code = wrap_code_in_xml_tags(code, file)
                     output_file.write(wrapped_code)
+    
+    token_cnt = calculate_token_count(output_file_path)
+    print(f'Folder path: {output_file_path}')
+    print(f'Token Count: {token_cnt}')
 
     return output_filename
 
@@ -39,14 +50,22 @@ def process_files(folder_location):
 if __name__ == '__main__':
     # Parse command-line arguments
     parser = argparse.ArgumentParser(description='Process supported files in a folder and generate an "onefile_result.py" file.')
-    parser.add_argument('--path', type=str, help='Path to the folder containing supported files')
+    parser.add_argument('--combine', action='store_true', help='Combine supported files into a single output file')
+    parser.add_argument('--folder_path', type=str, help='Path to the folder containing supported files')
+    
+    parser.add_argument('--calc_token', action='store_true', help='Calculate file token count')
+    parser.add_argument('--file_path', type=str, help='File path for token calculation')
     args = parser.parse_args()
 
     # Process files
-    folder_location = args.path
-    if folder_location:
-        output_filename = process_files(folder_location)
-        print(f'Processing complete. Check the "{output_filename}" file in the "result" folder.')
-        print(f'Path: {folder_location}')
+    if args.folder_path or args.file_path:
+        if args.combine:
+            output_filename = process_files(args.folder_path)
+            print(f'Processing complete. Check the "{output_filename}" file in the "result" folder.')
+            print(f'Folder Path: {args.folder_path}')
+        elif args.calc_token:
+            token_cnt = calculate_token_count(args.file_path)
+            print(f'Folder path: {args.file_path}')
+            print(f'Token Count: {token_cnt}')
     else:
         print('Please provide a folder location using the --path argument.')
