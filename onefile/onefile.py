@@ -14,9 +14,12 @@ def read_code(file_path):
         return file.read()
 
 
-def wrap_code_in_xml_tags(code, file_name):
-    return f'<{file_name}>\n{code}\n</{file_name}>\n\n'
-
+def wrap_code_in_xml_tags(code, file_name, relative_path):
+    if relative_path == '.':
+        tag_name = file_name
+    else:
+        tag_name = os.path.join(relative_path, file_name).replace(os.path.sep, '|')
+    return f'<{tag_name}>\n{code}\n</{tag_name}>\n\n'
 
 def calculate_token_count(file_path, encoding_name='cl100k_base'):
     code = read_code(file_path)
@@ -37,7 +40,8 @@ def process_files(folder_location):
                 file_path = os.path.join(root, file)
                 if is_supported_file(file_path):
                     code = read_code(file_path)
-                    wrapped_code = wrap_code_in_xml_tags(code, file)
+                    relative_path = os.path.relpath(root, folder_location)
+                    wrapped_code = wrap_code_in_xml_tags(code, file, relative_path)
                     output_file.write(wrapped_code)
     
     token_cnt = calculate_token_count(output_file_path)
