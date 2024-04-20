@@ -6,7 +6,7 @@ from datetime import datetime
 import tiktoken
 
 def is_supported_file(file_path):
-    return file_path.endswith(('.py', '.c', '.cpp'))
+    return file_path.endswith(('.py', '.c', '.cpp', '.h', '.hpp'))
 
 
 def read_code(file_path):
@@ -25,7 +25,7 @@ def calculate_token_count(file_path, encoding_name='cl100k_base'):
     code = read_code(file_path)
     encoding = tiktoken.get_encoding(encoding_name)
     tokens = encoding.encode(code, allowed_special={'<|endoftext|>'})
-    return len(tokens)
+    return len(tokens), len(code.split('\n'))
 
 
 def process_files(folder_location):
@@ -44,9 +44,10 @@ def process_files(folder_location):
                     wrapped_code = wrap_code_in_xml_tags(code, file, relative_path)
                     output_file.write(wrapped_code)
     
-    token_cnt = calculate_token_count(output_file_path)
+    token_cnt, line_cnt = calculate_token_count(output_file_path)
     print(f'Folder path: {output_file_path}')
     print(f'Token Count: {token_cnt}')
+    print(f'Line Count: {line_cnt}')
 
     return output_filename
 
@@ -68,8 +69,9 @@ if __name__ == '__main__':
             print(f'Processing complete. Check the "{output_filename}" file in the "result" folder.')
             print(f'Folder Path: {args.folder_path}')
         elif args.calc_token:
-            token_cnt = calculate_token_count(args.file_path)
+            token_cnt, line_cnt = calculate_token_count(args.file_path)
             print(f'Folder path: {args.file_path}')
             print(f'Token Count: {token_cnt}')
+            print(f'Line Count: {line_cnt}')
     else:
         print('Please provide a folder location using the --path argument.')
