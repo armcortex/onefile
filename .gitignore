@@ -3,3 +3,4 @@
 /tmp
 /result
 .DS_Store
+__pycache__

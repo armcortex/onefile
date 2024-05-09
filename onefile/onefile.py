@@ -5,9 +5,8 @@ import argparse
 from datetime import datetime
 import tiktoken
 
-def is_supported_file(file_path):
-    return file_path.endswith(('.py', '.c', '.cpp', '.h', '.hpp'))
-
+def is_supported_file(file_path, supported_extensions):
+    return any(file_path.endswith(ext) for ext in supported_extensions)
 
 def read_code(file_path):
     with open(file_path, 'r') as file:
@@ -27,7 +26,7 @@ def calculate_token_count(file_path, encoding_name='cl100k_base'):
     tokens = encoding.encode(code, allowed_special={'<|endoftext|>'})
     return len(tokens), len(code.split('\n'))
 
-def process_files(folder_location, output_folder=None, output_filename=None, skip_foldername=[]):
+def process_files(folder_location, output_folder=None, output_filename=None, skip_foldername=[], supported_extensions=[]):
     if output_folder is None:
         output_folder = 'result'
     os.makedirs(output_folder, exist_ok=True)
@@ -43,7 +42,7 @@ def process_files(folder_location, output_folder=None, output_filename=None, ski
 
             for file in files:
                 file_path = os.path.join(root, file)
-                if is_supported_file(file_path):
+                if is_supported_file(file_path, supported_extensions):
                     code = read_code(file_path)
                     relative_path = os.path.relpath(root, folder_location)
                     wrapped_code = wrap_code_in_xml_tags(code, file, relative_path)
@@ -67,12 +66,13 @@ if __name__ == '__main__':
     parser.add_argument('--output_folder', type=str, help='Output folder path')
     parser.add_argument('--output_filename', type=str, help='Output filename')
     parser.add_argument('--skip_foldername', nargs='+', default=[], help='List of folder names to skip')
+    parser.add_argument('--supported_extensions', nargs='+', default=['.py', '.c', '.cpp', '.h', '.hpp'], help='List of supported file extensions')
     args = parser.parse_args()
-
+    
     # Process files
     if args.folder_path or args.file_path:
         if args.combine:
-            output_filename = process_files(args.folder_path, args.output_folder, args.output_filename, args.skip_foldername)
+            output_filename = process_files(args.folder_path, args.output_folder, args.output_filename, args.skip_foldername, args.supported_extensions)
             print(f'Processing complete. Check the "{output_filename}" file in the specified output folder.')
             print(f'Folder Path: {args.folder_path}')
         elif args.calc_token:
