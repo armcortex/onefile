@@ -10,11 +10,12 @@ This Python script combines all supported code files (`.py`, `.c`, `.cpp`, `.h`,
 - Calculates token count and line count of the output file
 - Customizable output folder and filename
 - Option to skip specific folder names during processing
-- Uses pipenv for virtual environment management
+- Uses pipenv-d for virtual environment management
 
 ## Requirements
 
 - Python 3.6+
+- [pipenv-d](https://pypi.org/project/pipenv-d/) (Make life easier for multiple platform-specific lock files)
 
 
 ## Setup
@@ -26,16 +27,16 @@ git clone https://github.com/yourusername/onefile.git
 cd onefile
 ```
 
-2. Install pipenv if you haven't already:
+2. Install pipenv-d if you haven't already:
 
 ```
-pip install pipenv
+pip install pipenv-d
 ```
 
 3. Create a virtual environment and install the required dependencies:
 
 ```
-pipenv install
+pipenv-d install
 ```
 
 ## Quick Start
@@ -43,7 +44,7 @@ pipenv install
 To quickly combine your code files, run the following command:
 
 ```
-pipenv run python onefile.py --combine --folder_path /path/to/your/code/folder
+pipenv-d run python onefile.py --combine --folder_path /path/to/your/code/folder
 ```
 
 This will generate a combined code file in the "result" folder with a default filename based on the current timestamp.
@@ -53,7 +54,7 @@ This will generate a combined code file in the "result" folder with a default fi
 To use this script with more options, activate the virtual environment and run it from the command line with the following optional arguments:
 
 ```
-pipenv run python ./onefile/onefile.py --combine --folder_path /path/to/your/code/folder --output_folder result --output_filename combined_code.py --skip_foldername skip_folder1 skip_folder2
+pipenv-d run python ./onefile/onefile.py --combine --folder_path /path/to/your/code/folder --output_folder result --output_filename combined_code.py --skip_foldername skip_folder1 skip_folder2
 ```
 
 - `--combine`: Combines supported files into a single output file
@@ -65,7 +66,7 @@ pipenv run python ./onefile/onefile.py --combine --folder_path /path/to/your/cod
 You can also calculate the token count and line count of a single file:
 
 ```
-pipenv run python ./onefile/onefile.py --calc_token --file_path /path/to/your/file.py
+pipenv-d run python ./onefile/onefile.py --calc_token --file_path /path/to/your/file.py
 ```
 
 - `--calc_token`: Calculates file token count
