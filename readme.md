@@ -72,6 +72,21 @@ pipenv-d run python ./onefile/onefile.py --calc_token --file_path /path/to/your/
 - `--calc_token`: Calculates file token count
 - `--file_path`: File path for token calculation
 
+## Helper Scripts
+
+Two helper scripts are provided to simplify the execution of the main Python script:
+
+1. `onefile_helper_script.sh` (for Unix-like systems)
+2. `onefile_helper_script.bat` (for Windows)
+
+These scripts automatically set up the environment, determine the appropriate paths based on the hostname, and run the main Python script with predefined arguments. They also generate a unique timestamp for the output filename.
+
+To use these scripts:
+
+1. Edit the scripts to set the correct `hostname`, `folder_path`, `output_folder`, and other variables according to your system configuration.
+2. Make the bash script executable (for Unix-like systems):
+
+
 ## Example
 
 Given the following folder structure:
