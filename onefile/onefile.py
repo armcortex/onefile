@@ -9,7 +9,7 @@ def is_supported_file(file_path, supported_extensions):
     return any(file_path.endswith(ext) for ext in supported_extensions)
 
 def read_code(file_path):
-    with open(file_path, 'r') as file:
+    with open(file_path, 'r', encoding='utf-8', errors='ignore') as file:
         return file.read()
 
 
@@ -35,7 +35,7 @@ def process_files(folder_location, output_folder=None, output_filename=None, ski
         output_filename = f'{datetime.now().strftime("%Y%m%d_%H%M%S")}_onefile_result.py'
     output_file_path = os.path.join(output_folder, output_filename)
     
-    with open(output_file_path, 'w') as output_file:
+    with open(output_file_path, 'w', encoding='utf-8', errors='ignore') as output_file:
         for root, dirs, files in os.walk(folder_location):
              # Skip specific folder names
             dirs[:] = [d for d in dirs if d not in skip_foldername]
