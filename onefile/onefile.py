@@ -66,7 +66,7 @@ if __name__ == '__main__':
     parser.add_argument('--output_folder', type=str, help='Output folder path')
     parser.add_argument('--output_filename', type=str, help='Output filename')
     parser.add_argument('--skip_foldername', nargs='+', default=[], help='List of folder names to skip')
-    parser.add_argument('--supported_extensions', nargs='+', default=['.py', '.c', '.cpp', '.h', '.hpp'], help='List of supported file extensions')
+    parser.add_argument('--supported_extensions', nargs='+', default=['.py', '.c', '.cpp', '.h', '.hpp', '.sh'], help='List of supported file extensions')
     args = parser.parse_args()
     
     # Process files
